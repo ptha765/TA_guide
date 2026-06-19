@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;}
+body{font-family:"IBM Plex Sans","IBM Plex Sans Thai","IBM Plex Sans JP",sans-serif;background:#EEF2F6;color:#16243B;-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;}
+#ta-scroll::-webkit-scrollbar,nav::-webkit-scrollbar{width:10px;}
+#ta-scroll::-webkit-scrollbar-thumb,nav::-webkit-scrollbar-thumb{background:#C6D0DB;border-radius:8px;border:2px solid #EEF2F6;}
+@keyframes taFade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+</style>
+</helmet>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#15487E"/><rect x="30" y="24" width="40" height="40" fill="#2E86C9"/><polygon points="50,30 66,60 34,60" fill="#15487E"/><text x="50" y="82" font-family="sans-serif" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">TA</text></svg>
+</template>
+<div style="height:100vh;min-height:100vh;display:flex;flex-direction:column;background:#EEF2F6;font-family:'IBM Plex Sans','IBM Plex Sans Thai','IBM Plex Sans JP',sans-serif;">
+
+  <header style="height:78px;flex:none;display:flex;align-items:center;gap:18px;padding:0 28px;background:#FFFFFF;border-bottom:1px solid #E2E8F0;box-shadow:0 1px 3px rgba(16,36,59,.04);z-index:5;">
+    <img src="assets/logo.png" alt="Nippon Steel GSteel GJS" style="height:48px;width:auto;display:block;"/>
+    <div style="width:1px;height:36px;background:#E2E8F0;"></div>
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <div style="font-size:16.5px;font-weight:600;letter-spacing:.01em;color:#15487E;">{{ appTitle }}</div>
+      <div style="font-size:12.5px;color:#6B7C90;font-weight:500;">{{ appSub }}</div>
+    </div>
+    <div style="flex:1;"></div>
+    <div style="display:flex;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:11px;padding:3px;gap:2px;">
+      <sc-for list="{{ langs }}" as="lg" hint-placeholder-count="3">
+        <button onClick="{{ lg.onClick }}" style="border:none;cursor:pointer;font-size:13px;font-weight:600;padding:7px 15px;border-radius:8px;background:{{ lg.bg }};color:{{ lg.fg }};transition:all .15s;">{{ lg.label }}</button>
+      </sc-for>
+    </div>
+  </header>
+
+  <div style="flex:1;display:flex;min-height:0;">
+
+    <nav style="width:302px;flex:none;background:#FFFFFF;border-right:1px solid #E2E8F0;overflow-y:auto;padding:14px 0 28px;">
+      <sc-for list="{{ nav }}" as="it" hint-placeholder-count="11">
+        <sc-if value="{{ it.isGroup }}">
+          <div style="padding:18px 24px 8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9AA8B6;">{{ it.gTitle }}</div>
+        </sc-if>
+        <sc-if value="{{ it.isStep }}">
+          <button onClick="{{ it.onClick }}" style="width:100%;text-align:left;border:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:9px 24px 9px 21px;background:{{ it.bg }};border-left:3px solid {{ it.bar }};transition:background .15s;">
+            <span style="flex:none;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;background:{{ it.badgeBg }};color:{{ it.badgeFg }};">{{ it.mark }}</span>
+            <span style="font-size:13.5px;font-weight:{{ it.weight }};color:{{ it.fg }};line-height:1.35;">{{ it.title }}</span>
+          </button>
+        </sc-if>
+      </sc-for>
+    </nav>
+
+    <main style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div id="ta-scroll" style="flex:1;overflow-y:auto;padding:38px 44px 52px;">
+        <div key="{{ stepKey }}" style="max-width:864px;margin:0 auto;opacity:1;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px;">
+            <span style="font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#1F6FB8;">{{ stepChapter }}</span>
+            <span style="color:#C6D0DB;">·</span>
+            <span style="font-size:12px;font-weight:600;color:#9AA8B6;">{{ stepCounter }}</span>
+          </div>
+          <h1 style="margin:0 0 28px;font-size:29px;line-height:1.25;font-weight:700;color:#15487E;letter-spacing:.004em;text-wrap:balance;">{{ stepTitle }}</h1>
+
+          <sc-for list="{{ blocks }}" as="b">
+            <div style="margin-bottom:22px;">
+              <sc-if value="{{ b.isText }}">
+                <p style="margin:0;font-size:16px;line-height:1.78;color:#3A4A5E;text-wrap:pretty;">{{ b.text }}</p>
+              </sc-if>
+              <sc-if value="{{ b.isNoteInfo }}">
+                <div style="display:flex;gap:13px;padding:15px 18px;background:#EAF2FA;border:1px solid #CFE2F2;border-radius:12px;">
+                  <span style="flex:none;width:22px;height:22px;border-radius:50%;background:#2E86C9;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-style:italic;">i</span>
+                  <p style="margin:0;font-size:14.5px;line-height:1.65;color:#27496B;font-weight:500;">{{ b.text }}</p>
+                </div>
+              </sc-if>
+              <sc-if value="{{ b.isNoteWarn }}">
+                <div style="display:flex;gap:13px;padding:15px 18px;background:#FDF3E7;border:1px solid #F4DCBE;border-radius:12px;">
+                  <span style="flex:none;width:22px;height:22px;border-radius:50%;background:#E08A2B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">!</span>
+                  <p style="margin:0;font-size:14.5px;line-height:1.65;color:#8A5A12;font-weight:500;">{{ b.text }}</p>
+                </div>
+              </sc-if>
+              <sc-if value="{{ b.isImage }}">
+                <figure style="margin:0;">
+                  <div style="border:1px solid #E2E8F0;border-radius:13px;overflow:hidden;background:#F8FAFC;box-shadow:0 3px 14px rgba(16,36,59,.07);">
+                    <img src="{{ b.src }}" alt="{{ b.caption }}" style="display:block;width:100%;height:auto;"/>
+                  </div>
+                  <figcaption style="margin-top:10px;font-size:13px;color:#6B7C90;line-height:1.55;padding-left:2px;">{{ b.caption }}</figcaption>
+                </figure>
+              </sc-if>
+              <sc-if value="{{ b.isImageSm }}">
+                <figure style="margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+                  <div style="border:1px solid #E2E8F0;border-radius:13px;overflow:hidden;background:#F8FAFC;box-shadow:0 3px 14px rgba(16,36,59,.07);max-width:400px;">
+                    <img src="{{ b.src }}" alt="{{ b.caption }}" style="display:block;width:100%;height:auto;"/>
+                  </div>
+                  <figcaption style="font-size:13px;color:#6B7C90;line-height:1.55;">{{ b.caption }}</figcaption>
+                </figure>
+              </sc-if>
+              <sc-if value="{{ b.isMenu }}">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:16px 18px;background:#0F2F52;border-radius:13px;">
+                  <sc-for list="{{ b.segments }}" as="s" hint-placeholder-count="4">
+                    <span style="font-size:13px;font-weight:600;color:#D7E6F5;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);padding:6px 12px;border-radius:8px;">{{ s.label }}</span>
+                    <sc-if value="{{ s.notLast }}"><span style="color:#5E86AD;font-size:15px;">›</span></sc-if>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ b.isSubsteps }}">
+                <div style="display:flex;flex-direction:column;gap:13px;">
+                  <sc-for list="{{ b.items }}" as="st" hint-placeholder-count="3">
+                    <div style="display:flex;gap:14px;align-items:flex-start;">
+                      <span style="flex:none;min-width:28px;height:28px;border-radius:8px;background:#EAF2FA;color:#1F6FB8;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;margin-top:1px;padding:0 7px;">{{ st.num }}</span>
+                      <p style="margin:0;font-size:15.5px;line-height:1.62;color:#3A4A5E;padding-top:3px;">{{ st.text }}</p>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ b.isCreds }}">
+                <div style="border:1px solid #E2E8F0;border-radius:13px;overflow:hidden;box-shadow:0 2px 10px rgba(16,36,59,.05);">
+                  <div style="padding:12px 17px;background:#15487E;color:#fff;font-size:13.5px;font-weight:600;">{{ b.title }}</div>
+                  <table style="width:100%;border-collapse:collapse;font-size:14.5px;">
+                    <thead><tr style="background:#F1F5F9;">
+                      <th style="text-align:left;padding:10px 17px;color:#6B7C90;font-weight:600;border-bottom:1px solid #E2E8F0;">{{ b.h0 }}</th>
+                      <th style="text-align:left;padding:10px 17px;color:#6B7C90;font-weight:600;border-bottom:1px solid #E2E8F0;">{{ b.h1 }}</th>
+                      <th style="text-align:left;padding:10px 17px;color:#6B7C90;font-weight:600;border-bottom:1px solid #E2E8F0;">{{ b.h2 }}</th>
+                    </tr></thead>
+                    <tbody>
+                      <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="2">
+                        <tr>
+                          <td style="padding:12px 17px;font-weight:700;color:#15487E;border-bottom:1px solid #EEF2F6;">{{ r.c }}</td>
+                          <td style="padding:12px 17px;color:#28394C;font-family:'IBM Plex Sans',monospace;border-bottom:1px solid #EEF2F6;letter-spacing:.02em;">{{ r.u }}</td>
+                          <td style="padding:12px 17px;color:#28394C;font-family:'IBM Plex Sans',monospace;border-bottom:1px solid #EEF2F6;letter-spacing:.02em;">{{ r.p }}</td>
+                        </tr>
+                      </sc-for>
+                    </tbody>
+                  </table>
+                </div>
+              </sc-if>
+              <sc-if value="{{ b.isScale }}">
+                <div style="display:flex;flex-direction:column;gap:9px;">
+                  <sc-for list="{{ b.cells }}" as="c" hint-placeholder-count="5">
+                    <div style="display:flex;align-items:center;gap:15px;padding:12px 16px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;">
+                      <span style="flex:none;width:36px;height:36px;border-radius:10px;background:{{ c.color }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;">{{ c.n }}</span>
+                      <span style="font-size:15.5px;font-weight:600;color:#28394C;">{{ c.name }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ b.isNinebox }}">
+                <div style="display:flex;gap:16px;align-items:stretch;padding:20px;background:#fff;border:1px solid #E2E8F0;border-radius:14px;box-shadow:0 2px 10px rgba(16,36,59,.05);">
+                  <div style="display:flex;align-items:center;">
+                    <span style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:12px;font-weight:700;letter-spacing:.05em;color:#1F6FB8;text-transform:uppercase;">{{ b.ylabel }} ↑</span>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+                      <sc-for list="{{ b.cells }}" as="c" hint-placeholder-count="9">
+                        <div style="min-height:92px;border-radius:12px;padding:12px;background:{{ c.bg }};border:1px solid {{ c.border }};display:flex;flex-direction:column;justify-content:space-between;gap:8px;">
+                          <span style="width:24px;height:24px;border-radius:7px;background:{{ c.badgeBg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;">{{ c.n }}</span>
+                          <span style="font-size:12.5px;font-weight:700;color:{{ c.fg }};line-height:1.3;">{{ c.name }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <div style="text-align:center;margin-top:11px;font-size:12px;font-weight:700;letter-spacing:.05em;color:#1F6FB8;text-transform:uppercase;">{{ b.xlabel }} →</div>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ b.isChoice }}">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                  <sc-for list="{{ b.options }}" as="o" hint-placeholder-count="2">
+                    <div style="border:1.5px solid {{ o.border }};background:{{ o.bg }};border-radius:14px;padding:18px;">
+                      <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px;">
+                        <span style="flex:none;width:30px;height:30px;border-radius:9px;background:{{ o.accent }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;">{{ o.icon }}</span>
+                        <span style="font-size:15px;font-weight:700;color:{{ o.titleColor }};line-height:1.3;">{{ o.label }}</span>
+                      </div>
+                      <p style="margin:0;font-size:14px;line-height:1.6;color:#52606D;">{{ o.desc }}</p>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <footer style="flex:none;height:76px;display:flex;align-items:center;gap:22px;padding:0 44px;background:#FFFFFF;border-top:1px solid #E2E8F0;">
+        <button onClick="{{ prev }}" disabled="{{ isFirst }}" style="border:1px solid #D6DFE8;background:#fff;color:#44546A;font-size:14px;font-weight:600;padding:11px 20px;border-radius:10px;cursor:{{ prevCursor }};opacity:{{ prevOpacity }};white-space:nowrap;transition:all .15s;">‹ {{ backLabel }}</button>
+        <div style="flex:1;display:flex;flex-direction:column;gap:7px;min-width:0;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#6B7C90;font-weight:500;">
+            <span>{{ stepCounter }}</span><span>{{ progressLabel }}</span>
+          </div>
+          <div style="height:6px;background:#EDF1F5;border-radius:99px;overflow:hidden;">
+            <div style="height:100%;width:{{ progressPct }}%;background:linear-gradient(90deg,#2E86C9,#15487E);border-radius:99px;transition:width .4s ease;"></div>
+          </div>
+        </div>
+        <button onClick="{{ next }}" disabled="{{ isLast }}" style="border:none;background:#15487E;color:#fff;font-size:14px;font-weight:600;padding:12px 22px;border-radius:10px;cursor:{{ nextCursor }};opacity:{{ nextOpacity }};white-space:nowrap;box-shadow:0 2px 8px rgba(21,72,126,.25);transition:all .15s;">{{ nextLabel }} ›</button>
+      </footer>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:860},&quot;defaultLang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;th&quot;,&quot;en&quot;,&quot;ja&quot;],&quot;default&quot;:&quot;th&quot;,&quot;tsType&quot;:&quot;'th'|'en'|'ja'&quot;},&quot;hideScreenshots&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    let step = 0;
+    let lang = (props && props.defaultLang) || 'th';
+    try {
+      const s = localStorage.getItem('gstTaStep');
+      if (s !== null && s !== undefined) step = parseInt(s, 10) || 0;
+      if (!(props && props.defaultLang)) {
+        const l = localStorage.getItem('gstTaLang');
+        if (l) lang = l;
+      }
+    } catch(e){}
+    this.state = { step: step, lang: lang };
+  }
+
+  componentDidUpdate(prev){
+    if (prev.defaultLang !== this.props.defaultLang && this.props.defaultLang) {
+      this.setState({ lang: this.props.defaultLang });
+    }
+  }
+
+  L(v){
+    const lang = this.state.lang;
+    if (v && typeof v === 'object' && ('th' in v || 'en' in v || 'ja' in v)) {
+      return v[lang] != null ? v[lang] : (v.en != null ? v.en : v.th);
+    }
+    return v;
+  }
+
+  setLang(l){
+    this.setState({ lang: l });
+    try { localStorage.setItem('gstTaLang', l); } catch(e){}
+  }
+  goTo(i){
+    const total = this.STEPS.length;
+    const step = Math.max(0, Math.min(i, total - 1));
+    this.setState({ step: step });
+    try { localStorage.setItem('gstTaStep', String(step)); } catch(e){}
+    try { const el = document.getElementById('ta-scroll'); if (el) el.scrollTop = 0; } catch(e){}
+  }
+
+  get STEPS(){
+    if (this._steps) return this._steps;
+    const T = (th,en,ja)=>({th,en,ja});
+    this._steps = [
+      { ch:'intro', title:T('ระบบประเมินศักยภาพพนักงาน (Talent Assessment)','Employee Talent Assessment System','従業員タレント評価システム'), blocks:[
+        { k:'text', t:T(
+          'คู่มือนี้จัดทำขึ้นสำหรับ “ผู้ประเมิน” เพื่อใช้ประเมินศักยภาพของพนักงานใต้บังคับบัญชาผ่านระบบ GAPP ตามที่ฝ่ายทรัพยากรบุคคล (HR) กำหนด ครอบคลุมตั้งแต่การเข้าสู่ระบบ การบันทึกแบบประเมิน การยืนยันผล ไปจนถึงการเรียกดูรายงาน',
+          'This guide is for “Assessors” to evaluate the potential of their subordinates through the GAPP system as defined by HR — covering everything from login and recording assessments to confirming results and viewing reports.',
+          '本マニュアルは「評価者」が GAPP システムを通じて、人事(HR)が定めた範囲で部下のタレントを評価するためのものです。ログインから評価入力、結果の確定、レポート閲覧までを網羅します。') },
+        { k:'note', tone:'info', t:T(
+          'เป็นระบบเดียวกับการประเมินผลประจำปี (PMS) เข้าใช้งานผ่านไอคอน GAPP บนเดสก์ท็อป',
+          'This is the same system used for the annual performance review (PMS), accessed via the GAPP icon on your desktop.',
+          '年次評価(PMS)と同じシステムで、デスクトップの GAPP アイコンからアクセスします。') },
+        { k:'text', t:T(
+          'ผลการประเมินจะถูกสรุปในรูปแบบ 9-Box Grid โดยพิจารณาจาก 2 แกน คือ ด้านผลงาน (Performance) และด้านศักยภาพ (Potential) เพื่อจัดกลุ่มพนักงานออกเป็น 9 กลุ่ม',
+          'Results are summarized in a 9-Box Grid based on two axes — Performance and Potential — to classify employees into nine talent groups.',
+          '評価結果は「業績(Performance)」と「潜在能力(Potential)」の2軸からなる 9-Box グリッドで集計され、従業員は9つのグループに分類されます。') },
+        { k:'ninebox' }
+      ]},
+
+      { ch:'start', title:T('เข้าสู่ระบบ GAPP','Log in to GAPP','GAPP へログイン'), blocks:[
+        { k:'sub', ordered:true, items:[
+          T('เปิดโปรแกรมผ่านไอคอน GAPP บนเดสก์ท็อป','Open the program via the GAPP icon on your desktop.','デスクトップの GAPP アイコンから起動します。'),
+          T('กรอก G Steel ID (รหัสพนักงาน) และ Password','Enter your G Steel ID (employee code) and password.','G Steel ID(社員コード)とパスワードを入力します。'),
+          T('เลือก Database เป็น PROD 900 ECC','Select the database PROD 900 ECC.','データベースで PROD 900 ECC を選択します。'),
+          T('คลิกปุ่ม Login เพื่อเข้าสู่ระบบ','Click the Login button to enter the system.','Login ボタンをクリックしてログインします。')
+        ]},
+        { k:'imgSm', src:'assets/image1.jpg', c:T('ไอคอน GAPP บนเดสก์ท็อป','The GAPP icon on the desktop.','デスクトップの GAPP アイコン。') },
+        { k:'img', src:'assets/image2.jpg', c:T('หน้าจอ Login GAPP — เลือก Database “PROD 900 ECC”','The GAPP login screen — select database “PROD 900 ECC”.','GAPP ログイン画面 — データベース「PROD 900 ECC」を選択。') },
+        { k:'creds', title:T('รหัสผ่านเริ่มต้น สำหรับผู้ใช้ใหม่ (ครั้งแรก)','Default credentials for new users (first time)','新規ユーザーの初期認証情報(初回)'),
+          h:[T('บริษัท','Company','会社'), T('User (รหัสพนักงาน)','User (Employee code)','ユーザー(社員コード)'), T('Password','Password','パスワード')],
+          rows:[ {c:'GST', u:'S-XXXX', p:'1234'}, {c:'GJS', u:'99999 / GJS9999', p:'1234'} ] },
+        { k:'note', tone:'warn', t:T(
+          'รหัสผ่านนี้สำหรับใช้งานครั้งแรกเท่านั้น ระบบจะให้เปลี่ยนรหัสผ่านใหม่ทันทีหลังเข้าสู่ระบบ',
+          'These credentials are for first-time use only — the system will prompt you to set a new password right after login.',
+          'この認証情報は初回のみ有効で、ログイン直後にパスワードの変更を求められます。') }
+      ]},
+
+      { ch:'start', title:T('เปลี่ยนรหัสผ่าน GAPP','Change your GAPP password','GAPP パスワードの変更'), blocks:[
+        { k:'text', t:T(
+          'หากเป็นผู้ใช้ใหม่ หรือรหัสผ่านหมดอายุ ให้คลิก “New Password” ที่หน้า Login เพื่อตั้งรหัสผ่านใหม่',
+          'If you are a new user or your password has expired, click “New Password” on the login screen to set a new one.',
+          '新規ユーザーの場合、またはパスワードの有効期限が切れた場合は、ログイン画面で「New Password」をクリックして新しいパスワードを設定します。') },
+        { k:'img', src:'assets/image3.jpg', c:T(
+          'หน้าตั้งรหัสผ่านใหม่ — กรอก New Password และ Confirm Password (อย่างน้อย 4 ตัวอักษร) แล้วกด Save',
+          'New password screen — enter New Password and Confirm Password (at least 4 characters), then click Save.',
+          'パスワード設定画面 — New Password と Confirm Password(4文字以上)を入力し、Save をクリックします。') },
+        { k:'note', tone:'warn', t:T(
+          'ระบบจะบังคับเปลี่ยนรหัสผ่านเมื่อเข้าใช้ครั้งแรก และรหัสผ่านมีอายุ 180 วัน (Password Expired 180-day)',
+          'The system forces a password change on first login, and passwords expire every 180 days.',
+          'システムは初回ログイン時にパスワード変更を強制し、パスワードは180日で有効期限が切れます。') }
+      ]},
+
+      { ch:'start', title:T('เข้าแบบประเมิน Talent Assessment','Access the Talent Assessment','タレント評価へアクセス'), blocks:[
+        { k:'text', t:T(
+          'เมื่อเข้าระบบประเมินทักษะครั้งแรก ให้เปลี่ยนรหัสผ่านใหม่ (New Password) และยืนยัน (Confirm Password) โดยรหัสผ่านเริ่มต้น (Default Password) คือ 111111',
+          'When you first enter the assessment system, set a New Password and Confirm Password. The default password is 111111.',
+          '評価システムへ初めてログインする際は、New Password と Confirm Password を設定します。初期パスワードは 111111 です。') },
+        { k:'img', src:'assets/image6.jpg', c:T(
+          'หน้าจอ Reset Password — กรอก Default Pass (111111), New Pass และ Conf. Pass แล้วกด Reset Password',
+          'Reset Password screen — enter Default Pass (111111), New Pass and Conf. Pass, then click Reset Password.',
+          'Reset Password 画面 — Default Pass(111111)、New Pass、Conf. Pass を入力し、Reset Password をクリックします。') },
+        { k:'text', t:T(
+          'การเข้าใช้งานครั้งต่อไป ให้ใส่รหัสผ่านที่เปลี่ยนไว้ตอนเข้าครั้งแรก',
+          'For subsequent logins, use the password you set during your first login.',
+          '次回以降のログインでは、初回に設定したパスワードを入力します。') },
+        { k:'note', tone:'info', t:T(
+          'สามารถเปลี่ยนภาษาของระบบได้จากเมนู “Language” ที่แถบด้านบน',
+          'You can change the system language from the “Language” menu in the top bar.',
+          '画面上部の「Language」メニューからシステムの言語を変更できます。') }
+      ]},
+
+      { ch:'assess', title:T('เข้าเมนูแบบประเมิน (HRTA201)','Open the assessment menu (HRTA201)','評価メニューを開く (HRTA201)'), blocks:[
+        { k:'menu', seg:['HR','[HRTA000] HR Talent Assessment','[HRTA200] Transaction','[HRTA201] Assessment'] },
+        { k:'img', src:'assets/image9.jpg', c:T(
+          'เส้นทางเมนูเข้าสู่หน้าประเมิน HRTA201 Assessment',
+          'The menu path to the HRTA201 Assessment screen.',
+          'HRTA201 Assessment 画面へのメニュー経路。') },
+        { k:'text', t:T(
+          'หน้านี้ใช้สำหรับประเมินศักยภาพพนักงาน โดยผู้ประเมินทำการประเมินพนักงานใต้บังคับบัญชาตามที่ HR กำหนด',
+          'This screen is used to assess employee potential. Assessors evaluate the subordinates assigned to them by HR.',
+          'この画面は従業員のタレントを評価するためのものです。評価者は HR が割り当てた部下を評価します。') }
+      ]},
+
+      { ch:'assess', title:T('ขั้นตอนที่ 1 — เลือกพนักงาน','Step 1 — Select an employee','手順1 — 従業員を選択'), blocks:[
+        { k:'text', t:T(
+          'คลิกช่อง “เลือกพนักงาน” ด้านบนของแบบประเมิน เพื่อแสดงรายชื่อพนักงานที่พร้อมประเมิน',
+          'Click the “Select employee” field at the top of the form to display the list of employees ready for assessment.',
+          'フォーム上部の「従業員を選択」欄をクリックし、評価可能な従業員の一覧を表示します。') },
+        { k:'imgSm', src:'assets/image10.jpg', c:T('ช่อง “เลือกพนักงาน” ด้านบนของแบบประเมิน','The “Select employee” field at the top of the form.','フォーム上部の「従業員を選択」欄。') },
+        { k:'img', src:'assets/image13.jpg', c:T(
+          'รายชื่อพนักงานที่พร้อมประเมิน — เลือกพนักงานแล้วกดปุ่ม “เลือก”',
+          'List of employees ready for assessment — choose an employee and click “Select”.',
+          '評価可能な従業員の一覧 — 従業員を選び「選択」をクリックします。') },
+        { k:'note', tone:'info', t:T(
+          'ระบบจะแสดงเฉพาะพนักงานใต้บังคับบัญชาที่ HR กำหนดให้ประเมินเท่านั้น',
+          'The system shows only the subordinates that HR has assigned you to assess.',
+          'システムには、HR が評価対象として割り当てた部下のみが表示されます。') }
+      ]},
+
+      { ch:'assess', title:T('ขั้นตอนที่ 2 — บันทึกคะแนน','Step 2 — Record the scores','手順2 — スコアを入力'), blocks:[
+        { k:'text', t:T(
+          'บันทึกแบบประเมินโดยเลือกระดับคะแนนตามความเป็นจริงในแต่ละข้อคำถาม แบ่งเป็น 2 มิติ คือ ด้านผลงาน (แกน X) และด้านศักยภาพ (แกน Y)',
+          'Record the assessment by selecting an honest score for each question. There are two dimensions: Performance (X axis) and Potential (Y axis).',
+          '各設問について実態に即したスコアを選択して評価を入力します。評価は「業績(X軸)」と「潜在能力(Y軸)」の2つの軸で構成されます。') },
+        { k:'img', src:'assets/image14.jpg', c:T(
+          'แบบประเมิน — เลือกระดับคะแนน 1–5 ในแต่ละข้อคำถาม',
+          'The assessment form — select a score of 1–5 for each question.',
+          '評価フォーム — 各設問でスコア 1〜5 を選択します。') },
+        { k:'scale' },
+        { k:'note', tone:'info', t:T(
+          'คะแนนรวมจะถูกแปลงเป็น Performance Scale และ Potential Scale เพื่อจัดกลุ่ม Talent ใน 9-Box โดยอัตโนมัติ',
+          'The totals are converted into a Performance Scale and Potential Scale to automatically place the employee in the 9-Box grid.',
+          '合計点は Performance Scale と Potential Scale に変換され、自動的に 9-Box グリッド上のグループに割り当てられます。') }
+      ]},
+
+      { ch:'assess', title:T('ขั้นตอนที่ 3 — ยืนยันการประเมิน','Step 3 — Confirm the assessment','手順3 — 評価を確定'), blocks:[
+        { k:'text', t:T(
+          'เมื่อประเมินครบทุกข้อแล้ว ให้เลือกการดำเนินการอย่างใดอย่างหนึ่ง',
+          'Once you have completed all questions, choose one of the following actions:',
+          'すべての設問の評価が完了したら、次のいずれかの操作を選択します。') },
+        { k:'choice', options:[
+          { kind:'confirm', label:T('ยืนยันการประเมิน','Confirm the assessment','評価を確定'), desc:T(
+            'ติ๊กช่อง “ยืนยันการประเมิน” แล้วกด Save เพื่อบันทึกและส่งผลการประเมินให้ HR',
+            'Tick “Confirm assessment” and click Save to submit the results to HR.',
+            '「評価を確定」にチェックを入れ、Save をクリックして HR に結果を送信します。') },
+          { kind:'draft', label:T('บันทึกร่าง (Save Draft)','Save as draft','下書き保存(Save Draft)'), desc:T(
+            'กด Save โดยไม่ติ๊กยืนยัน เพื่อเก็บคะแนนไว้ก่อน ยังไม่ส่งให้ HR',
+            'Click Save without confirming to keep your scores without submitting them to HR yet.',
+            '確定にチェックを入れずに Save をクリックすると、スコアを保存したまま HR には送信されません。') }
+        ]},
+        { k:'note', tone:'warn', t:T(
+          'เมื่อยืนยันและส่งให้ HR แล้ว จะแก้ไขได้เฉพาะที่หน้า HRTA202 หลังจาก HR ปลดล็อกให้เท่านั้น',
+          'Once confirmed and submitted to HR, edits are only possible on the HRTA202 screen after HR unlocks it.',
+          '確定して HR に送信した後は、HR がロックを解除した上で HRTA202 画面でのみ修正できます。') }
+      ]},
+
+      { ch:'reports', title:T('แก้ไขและยืนยันคะแนน (HRTA202)','Edit & Confirm Assessment (HRTA202)','評価の修正・確定 (HRTA202)'), blocks:[
+        { k:'menu', seg:['HR','[HRTA000] HR Talent Assessment','[HRTA200] Transaction','[HRTA202] Edit And Confirm Assessment'] },
+        { k:'text', t:T(
+          'ใช้หน้านี้เมื่อต้องการแก้ไขคะแนน หลังจาก HR ล็อกหน้า HRTA201 ไปแล้ว',
+          'Use this screen when you need to edit scores after HR has locked the HRTA201 screen.',
+          'HR が HRTA201 画面をロックした後にスコアを修正する場合は、この画面を使用します。') },
+        { k:'img', src:'assets/image20.jpg', c:T(
+          'หน้าจอ HRTA202 — ปรับแก้ไขคะแนนตามที่เห็นสมควร แล้วยืนยันผลการประเมิน',
+          'The HRTA202 screen — adjust the scores as appropriate, then confirm the results.',
+          'HRTA202 画面 — 必要に応じてスコアを調整し、評価結果を確定します。') }
+      ]},
+
+      { ch:'reports', title:T('รายงานสถานะการประเมิน (HRTA302)','Assessment status report (HRTA302)','評価ステータスレポート (HRTA302)'), blocks:[
+        { k:'menu', seg:['HR','[HRTA000] HR Talent Assessment','[HRTA300] Report','[HRTA302] Check Assessment List'] },
+        { k:'text', t:T(
+          'รายงานสำหรับติดตามสถานะการประเมินศักยภาพ (ดูได้เฉพาะพนักงานใต้บังคับบัญชา) ใช้ติดตามได้ดังนี้',
+          'A report for tracking the status of potential assessments (visible only for your subordinates). Use it to track:',
+          'タレント評価の進捗状況を追跡するレポートです(部下のみ閲覧可能)。次の項目を追跡できます。') },
+        { k:'sub', ordered:false, items:[
+          T('ติดตามว่าผู้ประเมินทำการประเมินไปแล้วหรือยัง','Whether the assessor has completed the assessment.','評価者が評価を完了したかどうか。'),
+          T('ติดตามการยืนยันผลการประเมิน','The confirmation of assessment results.','評価結果の確定状況。'),
+          T('ติดตามการรับทราบผลการประเมินของพนักงาน','Whether the employee has acknowledged the results.','従業員が結果を確認したかどうか。')
+        ]},
+        { k:'img', src:'assets/image21.jpg', c:T(
+          'รายงาน HRTA302 — ตรวจสอบสถานะการประเมินเป็นรายบุคคล',
+          'The HRTA302 report — check the assessment status for each individual.',
+          'HRTA302 レポート — 個人ごとの評価ステータスを確認します。') }
+      ]},
+
+      { ch:'reports', title:T('สรุปผลแบบ 9-Box Grid (HRTA304)','9-Box Grid summary (HRTA304)','9-Box グリッド集計 (HRTA304)'), blocks:[
+        { k:'menu', seg:['HR','[HRTA000] HR Talent Assessment','[HRTA300] Report','[HRTA304] Display Summarizes: 9 Box Grid'] },
+        { k:'text', t:T(
+          'รายงานสรุปผลการประเมินศักยภาพของพนักงานในรูปแบบ 9-Box Grid (ดูได้เฉพาะพนักงานใต้บังคับบัญชา)',
+          'A report summarizing employee potential assessments as a 9-Box Grid (visible only for your subordinates).',
+          '従業員のタレント評価を 9-Box グリッド形式で集計するレポートです(部下のみ閲覧可能)。') },
+        { k:'sub', ordered:true, items:[
+          T('เลือกเงื่อนไข Criteria เช่น ปี, ชุดการประเมิน, ฝ่าย และแผนก','Select your Criteria — e.g. year, assessment set, division and department.','年度・評価セット・部門・課などの Criteria を選択します。'),
+          T('คลิกปุ่ม View เพื่อแสดงรายงาน','Click the View button to display the report.','View ボタンをクリックしてレポートを表示します。'),
+          T('เลือกดูตามตำแหน่งงานจาก Tab ด้านล่าง เช่น Tab “Sup & Below”','Filter by job level using the tabs at the bottom, e.g. the “Sup & Below” tab.','下部のタブ(例:「Sup & Below」)で職位別に絞り込みます。')
+        ]},
+        { k:'img', src:'assets/image26.jpg', c:T(
+          'หน้าค้นหา HRTA304 — เลือก Criteria แล้วคลิก View',
+          'The HRTA304 search screen — select Criteria then click View.',
+          'HRTA304 検索画面 — Criteria を選択し View をクリックします。') },
+        { k:'img', src:'assets/image27.jpg', c:T(
+          'ผลสรุป 9-Box Grid — จัดกลุ่มพนักงานตามผลงาน × ศักยภาพ',
+          'The 9-Box Grid summary — employees grouped by Performance × Potential.',
+          '9-Box グリッド集計 — 業績 × 潜在能力で従業員を分類。') }
+      ]}
+    ];
+    return this._steps;
+  }
+
+  scaleCells(){
+    const L = this.L.bind(this);
+    return [
+      { n:1, color:'#C0392B', name:L({th:'ต่ำกว่ามาตรฐาน',en:'Below Standard',ja:'基準以下'}) },
+      { n:2, color:'#E0772E', name:L({th:'ควรปรับปรุง',en:'Needs Improvement',ja:'要改善'}) },
+      { n:3, color:'#E0A52E', name:L({th:'เป็นไปตามมาตรฐาน',en:'Meets Standard',ja:'標準どおり'}) },
+      { n:4, color:'#6FAE4A', name:L({th:'เกินมาตรฐาน',en:'Exceeds Standard',ja:'標準以上'}) },
+      { n:5, color:'#2E8B4F', name:L({th:'ยอดเยี่ยม',en:'Outstanding',ja:'卓越'}) }
+    ];
+  }
+
+  nineCells(){
+    const named = {
+      7:{name:'Potential Reassignment', bg:'#FBF1DC', border:'#EFD9A6', badge:'#D9A441', fg:'#8A6512'},
+      8:{name:'Promotable',             bg:'#E6F0FA', border:'#C2DCF2', badge:'#2F77C4', fg:'#1B5288'},
+      9:{name:'Stars',                  bg:'#E6F4E9', border:'#C0E2C9', badge:'#41A24E', fg:'#226B30'},
+      4:{name:'Need Improvement',       bg:'#F7E9E1', border:'#EAC9B6', badge:'#C26B3F', fg:'#8A4A24'},
+      5:{name:'Contributors',           bg:'#EDF2F8', border:'#D2DFEE', badge:'#5B91C7', fg:'#3A6093'},
+      6:{name:'Core Performer',          bg:'#E6F0FA', border:'#C2DCF2', badge:'#2F77C4', fg:'#1B5288'}
+    };
+    const order = [7,8,9,4,5,6,1,2,3];
+    return order.map(n=>{
+      if (named[n]) return { n:n, name:named[n].name, bg:named[n].bg, border:named[n].border, badgeBg:named[n].badge, fg:named[n].fg };
+      return { n:n, name:'', bg:'#F4F6F9', border:'#E2E8F0', badgeBg:'#AEBCCB', fg:'#9AA8B6' };
+    });
+  }
+
+  renderVals(){
+    const lang = this.state.lang;
+    const step = this.state.step;
+    const L = this.L.bind(this);
+    const steps = this.STEPS;
+    const total = steps.length;
+    const cur = steps[step];
+
+    const chapterTitles = {
+      intro:{th:'บทนำ',en:'Introduction',ja:'はじめに'},
+      start:{th:'เริ่มต้นใช้งาน',en:'Getting Started',ja:'利用開始'},
+      assess:{th:'การประเมิน',en:'Assessment',ja:'評価'},
+      reports:{th:'แก้ไข & รายงาน',en:'Edit & Reports',ja:'修正・レポート'}
+    };
+    const chapterOrder = ['intro','start','assess','reports'];
+
+    // sidebar nav
+    const nav = [];
+    chapterOrder.forEach(ck=>{
+      const idxs = steps.map((s,i)=>({s,i})).filter(o=>o.s.ch===ck);
+      if (!idxs.length) return;
+      nav.push({ isGroup:true, gTitle:L(chapterTitles[ck]) });
+      idxs.forEach(o=>{
+        const i = o.i;
+        const active = i===step;
+        const done = i<step;
+        nav.push({
+          isStep:true,
+          onClick:()=>this.goTo(i),
+          title:L(o.s.title),
+          mark: done ? '✓' : String(i+1),
+          weight: active ? 600 : 500,
+          bg: active ? '#EAF2FA' : 'transparent',
+          bar: active ? '#1F6FB8' : 'transparent',
+          fg: active ? '#15487E' : '#52606D',
+          badgeBg: active ? '#1F6FB8' : (done ? '#D6E6D9' : '#EDF1F5'),
+          badgeFg: active ? '#FFFFFF' : (done ? '#2E8B4F' : '#9AA8B6')
+        });
+      });
+    });
+
+    // languages
+    const langDefs = [{code:'th',label:'ไทย'},{code:'en',label:'EN'},{code:'ja',label:'日本語'}];
+    const langs = langDefs.map(d=>({
+      label:d.label,
+      onClick:()=>this.setLang(d.code),
+      bg: lang===d.code ? '#15487E' : 'transparent',
+      fg: lang===d.code ? '#FFFFFF' : '#52606D'
+    }));
+
+    // blocks for current step
+    const hide = this.props && this.props.hideScreenshots;
+    const blocks = [];
+    cur.blocks.forEach(b=>{
+      if (hide && (b.k==='img' || b.k==='imgSm')) return;
+      if (b.k==='text') blocks.push({ isText:true, text:L(b.t) });
+      else if (b.k==='note') blocks.push({ isNoteInfo: b.tone!=='warn', isNoteWarn: b.tone==='warn', text:L(b.t) });
+      else if (b.k==='img') blocks.push({ isImage:true, src:b.src, caption:L(b.c) });
+      else if (b.k==='imgSm') blocks.push({ isImageSm:true, src:b.src, caption:L(b.c) });
+      else if (b.k==='menu') blocks.push({ isMenu:true, segments: b.seg.map((s,i)=>({label:s, notLast:i<b.seg.length-1})) });
+      else if (b.k==='sub') blocks.push({ isSubsteps:true, items: b.items.map((it,i)=>({ num: b.ordered ? String(i+1) : '•', text:L(it) })) });
+      else if (b.k==='creds') blocks.push({ isCreds:true, title:L(b.title), h0:L(b.h[0]), h1:L(b.h[1]), h2:L(b.h[2]), rows:b.rows });
+      else if (b.k==='scale') blocks.push({ isScale:true, cells:this.scaleCells() });
+      else if (b.k==='ninebox') blocks.push({ isNinebox:true, cells:this.nineCells(),
+        xlabel:L({th:'ผลงาน · Performance',en:'Performance',ja:'業績 · Performance'}),
+        ylabel:L({th:'ศักยภาพ · Potential',en:'Potential',ja:'潜在能力 · Potential'}) });
+      else if (b.k==='choice') blocks.push({ isChoice:true, options: b.options.map(o=>{
+          const confirm = o.kind==='confirm';
+          return { label:L(o.label), desc:L(o.desc),
+            icon: confirm ? '✓' : '⤓',
+            accent: confirm ? '#2E8B4F' : '#6B7C90',
+            bg: confirm ? '#ECF6EF' : '#F4F6F9',
+            border: confirm ? '#BFE0C9' : '#DEE5EC',
+            titleColor: confirm ? '#1E6B3C' : '#44546A' };
+        }) });
+    });
+
+    const pct = Math.round(((step+1)/total)*100);
+    const stepOf = lang==='th' ? ('ขั้นที่ '+(step+1)+' จาก '+total)
+                  : lang==='ja' ? ((step+1)+' / '+total+' ステップ')
+                  : ('Step '+(step+1)+' of '+total);
+    const isFirst = step===0;
+    const isLast = step===total-1;
+
+    return {
+      appTitle: L({th:'คู่มือผู้ประเมิน',en:"Assessor's Guide",ja:'評価者ガイド'}),
+      appSub: L({th:'ระบบประเมินศักยภาพ Talent Assessment',en:'Talent Assessment System',ja:'タレント評価システム'}),
+      langs, nav,
+      stepChapter: L(chapterTitles[cur.ch]),
+      stepTitle: L(cur.title),
+      stepCounter: stepOf,
+      stepKey: 'step-'+step+'-'+lang,
+      blocks,
+      progressPct: pct,
+      progressLabel: pct+'%',
+      backLabel: L({th:'ย้อนกลับ',en:'Back',ja:'戻る'}),
+      nextLabel: isLast ? L({th:'เสร็จสิ้น',en:'Finish',ja:'完了'}) : L({th:'ถัดไป',en:'Next',ja:'次へ'}),
+      isFirst, isLast,
+      prev: ()=>this.goTo(step-1),
+      next: ()=>this.goTo(step+1),
+      prevCursor: isFirst ? 'default' : 'pointer',
+      prevOpacity: isFirst ? '.45' : '1',
+      nextCursor: isLast ? 'default' : 'pointer',
+      nextOpacity: isLast ? '.45' : '1'
+    };
+  }
+}
+</script>
+</body>
+</html>
